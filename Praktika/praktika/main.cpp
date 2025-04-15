@@ -28,7 +28,6 @@ private:
         }
         file.close();
     }
-
     void saveCredentials() {
         ofstream file(CREDENTIALS_FILE);
         if (!file.is_open()) {
