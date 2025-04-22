@@ -185,6 +185,11 @@ public:
         movies.push_back({ nextMovieId++, "Spirited Away", "Animation", "Japanese", "2001-07-20" });
         movies.push_back({ nextMovieId++, "3 Idiots", "Comedy/Drama", "Hindi", "2009-12-25" });
     }
+
+    void displayMoviesForUser() {
+        cout << "\n--- Available Movies ---\n";
+        viewMovies();
+    }
 };
 
 void adminFeatures(MovieManager& movieManager) {
@@ -264,9 +269,8 @@ void displayMainMenu() {
     cout << "Select your role: ";
 }
 
-void handleUserMenu() {
-    cout << "\n--- User Section ---\n";
-    cout << "User functionalities are not implemented yet.\n";
+void handleUserMenu(MovieManager& movieManager) {
+    movieManager.displayMoviesForUser();
 }
 
 void runSystem() {
@@ -283,7 +287,7 @@ void runSystem() {
             handleAdminMenu(adminManager, movieManager);
             break;
         case 2:
-            handleUserMenu();
+            handleUserMenu(movieManager);
             break;
         case 3:
             cout << "Exiting the system...\n";
