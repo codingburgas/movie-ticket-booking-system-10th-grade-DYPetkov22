@@ -4,9 +4,16 @@
 
 using namespace std;
 
+#ifdef _WIN32
+#define CLEAR_SCREEN "cls"
+#else
+#define CLEAR_SCREEN "clear"
+#endif
+
 void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& adminManager) {
     int choice;
     do {
+        system(CLEAR_SCREEN);
         cout << "\n--- Admin Functionalities ---\n";
         cout << "1. Add Movie\n";
         cout << "2. Delete Movie\n";
@@ -57,12 +64,16 @@ void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& a
             default: cout << "Invalid choice!\n";
             }
         }
+        cout << "Press Enter to continue...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
     } while ((isMainAdmin && choice != 8) || (!isMainAdmin && choice != 7));
 }
 
 void adminLoginFlow(AdminManager& adminManager, MovieManager& movieManager) {
     int adminChoice;
     do {
+        system(CLEAR_SCREEN);
         cout << "\n--- Admin Login ---\n";
         cout << "1. Login\n";
         cout << "2. View Admin Accounts\n";
@@ -90,12 +101,16 @@ void adminLoginFlow(AdminManager& adminManager, MovieManager& movieManager) {
         }
         case 2:
             adminManager.displayAdminAccounts();
+            cout << "Press Enter to continue...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
             break;
         case 3:
             cout << "Returning to login page...\n";
             break;
         default:
             cout << "Invalid choice!\n";
+            break;
         }
     } while (adminChoice != 3);
 }
@@ -103,6 +118,7 @@ void adminLoginFlow(AdminManager& adminManager, MovieManager& movieManager) {
 void userMenu(MovieManager& movieManager) {
     int choice;
     do {
+        system(CLEAR_SCREEN);
         cout << "\n--- User Menu ---\n";
         cout << "1. View Movies\n";
         cout << "2. Choose a Movie to Watch\n";
@@ -126,6 +142,12 @@ void userMenu(MovieManager& movieManager) {
             break;
         default:
             cout << "Invalid choice!\n";
+            break;
+        }
+        if (choice != 4) {
+            cout << "Press Enter to continue...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
         }
     } while (choice != 4);
 }
@@ -133,6 +155,7 @@ void userMenu(MovieManager& movieManager) {
 void userLoginFlow(UserManager& userManager, MovieManager& movieManager) {
     int userChoice;
     do {
+        system(CLEAR_SCREEN);
         cout << "\n--- User Login ---\n";
         cout << "1. Login\n";
         cout << "2. Create User Account\n";
@@ -171,13 +194,18 @@ void userLoginFlow(UserManager& userManager, MovieManager& movieManager) {
             break;
         default:
             cout << "Invalid choice!\n";
+            break;
         }
+        cout << "Press Enter to continue...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
     } while (userChoice != 3);
 }
 
 void guestMenu(MovieManager& movieManager) {
     int choice;
     do {
+        system(CLEAR_SCREEN);
         cout << "\n--- Guest Menu ---\n";
         cout << "1. View Movies\n";
         cout << "2. Back\n";
@@ -193,11 +221,18 @@ void guestMenu(MovieManager& movieManager) {
             break;
         default:
             cout << "Invalid choice!\n";
+            break;
+        }
+        if (choice != 2) {
+            cout << "Press Enter to continue...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
         }
     } while (choice != 2);
 }
 
 void loginPage() {
+    system(CLEAR_SCREEN);
     cout << "\n=== Welcome to the Movie Management System ===\n";
     cout << "1. Admin Login\n";
     cout << "2. User Login\n";
@@ -232,6 +267,9 @@ void runSystem() {
             break;
         default:
             cout << "Invalid choice! Try again.\n";
+            cout << "Press Enter to continue...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
         }
     } while (choice != 4);
 }
