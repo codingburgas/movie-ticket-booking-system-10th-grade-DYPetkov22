@@ -9,4 +9,3 @@ struct Movie {
     std::string language;
     std::string releaseDate;
 };
-

@@ -21,12 +21,17 @@ void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& a
         cout << "4. View Movie Suggestions\n";
         cout << "5. Approve a Suggestion\n";
         cout << "6. Reject a Suggestion\n";
+        cout << "7. Add Projection\n";
+        cout << "8. View Projections\n";
+        cout << "9. View Purchases for a Movie\n";
+
+
         if (isMainAdmin) {
-            cout << "7. Create New Admin Account\n";
-            cout << "8. Logout\n";
+            cout << "10. Create New Admin Account\n";
+            cout << "11. Logout\n";
         }
         else {
-            cout << "7. Logout\n";
+            cout << "10. Logout\n";
         }
         cout << "Enter choice: ";
         cin >> choice;
@@ -39,7 +44,10 @@ void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& a
             case 4: movieManager.viewSuggestions(); break;
             case 5: movieManager.approveSuggestion(); break;
             case 6: movieManager.rejectSuggestion(); break;
-            case 7: {
+            case 7: movieManager.addProjection(); break;
+            case 8: movieManager.viewProjections(); break;
+			case 9: movieManager.viewPurchasesForMovie(); break;
+            case 10: {
                 string username, password;
                 cout << "Enter new admin username: ";
                 cin >> username;
@@ -48,7 +56,7 @@ void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& a
                 adminManager.addAdminAccount(username, password);
                 break;
             }
-            case 8: movieManager.saveMoviesToFile(); cout << "Logging out...\n"; break;
+            case 11: movieManager.saveMoviesToFile(); cout << "Logging out...\n"; break;
             default: cout << "Invalid choice!\n";
             }
         }
@@ -60,14 +68,17 @@ void adminFeatures(MovieManager& movieManager, bool isMainAdmin, AdminManager& a
             case 4: movieManager.viewSuggestions(); break;
             case 5: movieManager.approveSuggestion(); break;
             case 6: movieManager.rejectSuggestion(); break;
-            case 7: movieManager.saveMoviesToFile(); cout << "Logging out...\n"; break;
+            case 7: movieManager.addProjection(); break;
+            case 8: movieManager.viewProjections(); break;
+            case 9: movieManager.viewPurchasesForMovie(); break;
+            case 10: movieManager.saveMoviesToFile(); cout << "Logging out...\n"; break;
             default: cout << "Invalid choice!\n";
             }
         }
         cout << "Press Enter to continue...";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cin.get();
-    } while ((isMainAdmin && choice != 8) || (!isMainAdmin && choice != 7));
+    } while ((isMainAdmin && choice != 11) || (!isMainAdmin && choice != 10));
 }
 
 void adminLoginFlow(AdminManager& adminManager, MovieManager& movieManager) {
@@ -115,65 +126,68 @@ void adminLoginFlow(AdminManager& adminManager, MovieManager& movieManager) {
     } while (adminChoice != 3);
 }
 
-void userMenu(MovieManager& movieManager) {
+void userMenu(MovieManager& movieManager, const std::string& username) {
     int choice;
     do {
         system(CLEAR_SCREEN);
-        cout << "\n--- User Menu ---\n";
-        cout << "1. View Movies\n";
-        cout << "2. Choose a Movie to Watch\n";
-        cout << "3. Suggest a Movie\n";
-        cout << "4. Logout\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+        cout << "\n------------------ USER MENU ------------------\n| 1. View Movies        | 2. Choose Movie      |\n| 3. Suggest a Movie    | 4. My Purchases      |\n| 5. Logout                                    |\n------------------------------------------------\nEnter your choice: ";
 
+		cin >> choice;
         switch (choice) {
         case 1:
             movieManager.displayMoviesForUser();
             break;
         case 2:
-            movieManager.chooseMovieToWatch();
+            movieManager.chooseMovieToWatch(username);
             break;
         case 3:
             movieManager.suggestMovie();
             break;
         case 4:
+            movieManager.viewAndDeleteMyPurchases(username); 
+            break;
+        case 5:
             cout << "Logging out...\n";
             break;
         default:
             cout << "Invalid choice!\n";
             break;
         }
-        if (choice != 4) {
+        if (choice != 5) {
             cout << "Press Enter to continue...";
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cin.get();
         }
-    } while (choice != 4);
+    } while (choice != 5);
 }
 
 void userLoginFlow(UserManager& userManager, MovieManager& movieManager) {
     int userChoice;
     do {
         system(CLEAR_SCREEN);
-        cout << "\n--- User Login ---\n";
-        cout << "1. Login\n";
-        cout << "2. Create User Account\n";
-        cout << "3. Back\n";
-        cout << "Enter your choice: ";
+        cout << "\n******************************************\n";
+        cout << "             USER LOGIN MENU            \n";
+        cout << "******************************************\n";
+        cout << "  1. Login\n";
+        cout << "  2. Create User Account \n";
+        cout << "  3. Back \n";
+        cout << "******************************************\n";
+        cout << "  Enter your choice: ";
         cin >> userChoice;
 
         switch (userChoice) {
         case 1: {
             string username, password;
-            cout << "Enter username: ";
+            cout << endl;
+            cout << "  Enter username: ";
             cin >> username;
-            cout << "Enter password: ";
+            cout << endl;
+            cout << "  Enter password: ";
             cin >> password;
             if (userManager.validateLogin(username, password)) {
                 cout << "Login successful!\n";
-                userMenu(movieManager);
-                return; // After logout, return to login page
+                userMenu(movieManager, username);
+                return; 
             }
             else {
                 cout << "Invalid credentials!\n";
@@ -206,9 +220,11 @@ void guestMenu(MovieManager& movieManager) {
     int choice;
     do {
         system(CLEAR_SCREEN);
-        cout << "\n--- Guest Menu ---\n";
+        cout << "\n  Guest Menu\n";
+        cout << "\n---------------------------\n";
         cout << "1. View Movies\n";
-        cout << "2. Back\n";
+        cout << "2. Back";
+        cout << "\n---------------------------\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -233,12 +249,17 @@ void guestMenu(MovieManager& movieManager) {
 
 void loginPage() {
     system(CLEAR_SCREEN);
-    cout << "\n=== Welcome to the Movie Management System ===\n";
-    cout << "1. Admin Login\n";
-    cout << "2. User Login\n";
-    cout << "3. View Movies (Guest)\n";
-    cout << "4. Exit\n";
-    cout << "Select your role: ";
+    cout << R"( 
+        _ _ _     _                      _          _____ _ _       _____ _           
+       | | | |___| |___ ___ _____ ___   | |_ ___   |   __|_| |_____|   __| |___ _ _ _ 
+       | | | | -_| |  _| . |     | -_|  |  _| . |  |   __| | |     |   __| | . | | | |
+       |_____|___|_|___|___|_|_|_|___|  |_| |___|  |__|  |_|_|_|_|_|__|  |_|___|_____|                                                                              
+)" << endl;
+    cout << "       1. Admin Login\n";
+    cout << "       2. User Login\n";
+    cout << "       3. View Movies (Guest)\n";
+    cout << "       4. Exit\n\n";
+    cout << "       Select your role: ";
 }
 
 void runSystem() {
@@ -250,7 +271,7 @@ void runSystem() {
     do {
         loginPage();
         cin >> choice;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear input buffer
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
 
         switch (choice) {
         case 1:

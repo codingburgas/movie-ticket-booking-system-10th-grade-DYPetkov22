@@ -1,4 +1,5 @@
 #include "UserManager.h"
+
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -65,6 +66,9 @@ bool UserManager::validateLogin(const string& username, const string& password) 
     }
     return false;
 }
+
+
+
 
 void UserManager::displayUserAccounts() {
     loadCredentials();
